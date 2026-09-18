@@ -1,0 +1,25 @@
+# Build & Compiled
+target/
+*.class
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+
+# Logs and OS
+*.log
+.DS_Store
+Thumbs.db
+
+# Secrets & Local Configs
+.env
+application-local.yml
