@@ -23,3 +23,6 @@ Thumbs.db
 # Secrets & Local Configs
 .env
 application-local.yml
+
+# Teaching Workspace & Interactive Course Website (Local Only)
+learn/
