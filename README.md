@@ -6,9 +6,15 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?style=flat&logo=docker)](https://www.docker.com/)
 [![Flyway](https://img.shields.io/badge/Flyway-Migrations-red.svg?style=flat&logo=flyway)](https://flywaydb.org/)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-Swagger%20UI-85EA2D.svg?style=flat&logo=swagger)](https://swagger.io/)
+[![React](https://img.shields.io/badge/React-19-61DAFB.svg?style=flat&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6.svg?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4.svg?style=flat&logo=tailwindcss)](https://tailwindcss.com/)
+[![Motion](https://img.shields.io/badge/Motion-Animations-FF0055.svg?style=flat)](https://motion.dev/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A high-performance subscription tracking and expense intelligence REST API backend built with **Java 25** and **Spring Boot 4.1.1**. TrackMySub empowers users to track recurring subscriptions, receive proactive renewal alerts, analyze monthly spending, and discover relevant discounts.
+A high-performance, full-stack subscription tracking and expense intelligence platform built with **Java 25**, **Spring Boot 4.1.1**, and a premium **React 19 + Vite** frontend. TrackMySub empowers users to track recurring subscriptions, receive proactive renewal alerts, analyze monthly spending, and discover relevant discounts — all through a polished, animated SaaS-grade interface.
+
 
 ---
 
@@ -276,6 +282,9 @@ All endpoints (except auth registration/login/refresh) require an `Authorization
 
 ## 🧰 Tech Stack
 
+### Backend
+
+
 | Component | Technology | Purpose |
 | :--- | :--- | :--- |
 | **Language** | Java 25 | Core platform language |
@@ -286,6 +295,25 @@ All endpoints (except auth registration/login/refresh) require an `Authorization
 | **Migrations** | Flyway | Version-controlled database schema migrations |
 | **Documentation** | Springdoc OpenAPI 2.6.0 | Interactive Swagger UI & OpenAPI v3 specs |
 | **Infrastructure** | Docker Compose | Local containerized PostgreSQL instance |
+
+
+### Frontend (`frontend/`)
+
+| Concern | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Scaffold / Ideation** | Google Stitch (Gemini 2.5 Pro) | AI-native UI prototyping → React + Tailwind export |
+| **Framework** | React 19 + TypeScript | Component model, type safety, modern React features |
+| **Build Tool** | Vite 6 | Instant HMR, fast bundling, monorepo-friendly |
+| **Styling** | Tailwind CSS v4 | Utility-first, zero-runtime, Stitch-compatible |
+| **Components** | shadcn/ui + Radix UI | Accessible, fully-owned, Tailwind-native primitives |
+| **Data Viz** | Recharts | Lightweight React-native charts for spending analytics |
+| **UI Animations** | Motion (`motion/react`) | Declarative, state-driven micro-interactions & transitions |
+| **Sequence / Landing** | GSAP + ScrollTrigger | Hero section, scroll storytelling, premium landing feel |
+| **Server State** | TanStack Query v5 | Caching, background refetch & optimistic updates |
+| **Global State** | Zustand | Auth tokens, user profile, notification count |
+| **HTTP Client** | Axios | JWT Bearer interceptors against the Spring Boot API |
+| **Forms** | React Hook Form + Zod | Type-safe form validation mirroring backend DTOs |
+
 
 ---
 
@@ -385,7 +413,8 @@ Execute the test suite via Maven:
 - [x] **Phase 2: Subscription Management** — Full CRUD, billing cycle calculations, renewal dates, and category management.
 - [x] **Phase 3: Dashboard & Analytics** — Monthly/annual spending calculations, category breakdowns, and summary APIs.
 - [x] **Phase 4: Notifications & Automation** — Scheduled renewal alert engine, idempotency tracking, and in-app notifications.
-- [ ] **Phase 5: Frontend Interface** — Modern React, TypeScript, and Tailwind CSS client dashboard with dynamic charts and optimistic UI updates.
+- [ ] **Phase 5: Frontend Interface** — Premium "$1K SaaS" client application living in `frontend/` (monorepo). UI scaffolded with **Google Stitch** (Gemini 2.5 Pro), built on **React 19 + TypeScript + Vite**, styled with **Tailwind CSS v4** and **shadcn/ui**, animated with **Motion** (`motion/react`) for state-driven UI transitions and **GSAP + ScrollTrigger** for the marketing landing page. Data fetching via **TanStack Query v5** with optimistic updates; JWT auth via Axios interceptors.
+
 - [ ] **Phase 6: Production Hardening** — Refresh Token Rotation (RTR) with Redis blacklisting, cursor-based pagination on list endpoints, and CI/CD automation.
 - [ ] **Phase 7: Advanced Features** — Smart renewal forecasting, automated email digests, and subscription deal recommendations.
 
