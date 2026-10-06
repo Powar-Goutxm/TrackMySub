@@ -391,20 +391,6 @@ Application configurations can be overridden in `application.yml` or through env
 
 ---
 
-## 🧪 Testing & Quality Verification
-
-TrackMySub uses a layered verification strategy:
-
-- **Unit Testing**: Testing service business logic, billing math, and utility classes in isolation with mocked repositories.
-- **Slice & Integration Testing**: `@WebMvcTest` for controller routing/validation and `@DataJpaTest` with test fixtures.
-- **Security Verification**: Testing JWT filter enforcement, expired token handling, and IDOR prevention rules.
-- **Contract Verification**: Continuous OpenAPI schema verification via Swagger UI.
-
-Execute the test suite via Maven:
-```bash
-./mvnw test
-```
-
 ---
 
 ## 🗺️ Roadmap
