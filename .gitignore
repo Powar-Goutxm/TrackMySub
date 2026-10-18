@@ -26,3 +26,8 @@ application-local.yml
 
 # Teaching Workspace & Interactive Course Website (Local Only)
 learn/
+
+# Frontend
+node_modules/
+dist/
+

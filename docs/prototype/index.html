@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrackMySub — $1K SaaS Interactive Prototype</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            surface: {
+              900: '#0c0d12',
+              800: '#14161f',
+              700: '#1d202e',
+              600: '#282c3f',
+            }
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'shimmer': 'shimmer 2.5s infinite',
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+              '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            shimmer: {
+              '100%': { transform: 'translateX(100%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c0d12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #282c3f;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4f46e5;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-card {
+      background: rgba(20, 22, 31, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.15);
+    }
+
+    .glass-nav {
+      background: rgba(12, 13, 18, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Radial Ambient Background Glows */
+    .bg-mesh-glow {
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.05) 0%, transparent 50%),
+        #090a0f;
+    }
+
+    /* Noise texture overlay */
+    .noise-bg {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="bg-mesh-glow noise-bg text-zinc-100 min-h-screen selection:bg-brand-500 selection:text-white flex flex-col font-sans antialiased">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="glass-nav sticky top-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('landing')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 p-[1px] shadow-lg shadow-indigo-500/25">
+          <div class="w-full h-full bg-surface-900 rounded-[11px] flex items-center justify-center">
+            <i data-lucide="credit-card" class="w-5 h-5 text-indigo-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">TrackMySub</span>
+            <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">v2.0 PRO</span>
+          </div>
+          <span class="text-[11px] text-zinc-400 block -mt-0.5">Subscription Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 bg-surface-800/60 p-1 rounded-full border border-white/5">
+        <button onclick="switchView('landing')" id="nav-btn-landing" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all text-white bg-surface-700/80 shadow-sm">
+          Landing Showcase
+        </button>
+        <button onclick="switchView('dashboard')" id="nav-btn-dashboard" class="px-4 py-1.5 rounded-full text-xs font-medium transition-all text-zinc-400 hover:text-white hover:bg-surface-700/40">
+          App Dashboard
+        </button>
+        <a href="#features" class="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white transition-all">Features</a>
+        <a href="#pricing" class="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white transition-all">Pricing</a>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-3">
+        <!-- Live Notifications Bell -->
+        <div class="relative">
+          <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl bg-surface-800/80 hover:bg-surface-700 border border-white/5 transition-all text-zinc-300 hover:text-white">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span id="unread-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-pulse">2</span>
+          </button>
+          
+          <!-- Notifications Dropdown Modal -->
+          <div id="notifications-panel" class="hidden absolute right-0 mt-3 w-80 sm:w-96 glass-card rounded-2xl shadow-2xl p-4 z-50">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-3">
+              <h4 class="font-semibold text-sm flex items-center gap-2">
+                <i data-lucide="bell" class="w-4 h-4 text-indigo-400"></i> Alerts & Reminders
+              </h4>
+              <button onclick="markAllNotificationsRead()" class="text-xs text-indigo-400 hover:underline">Mark all read</button>
+            </div>
+            <div class="space-y-2.5 max-h-72 overflow-y-auto" id="notifications-list">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary CTA / User Profile -->
+        <button onclick="switchView('dashboard')" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-700 hover:to-indigo-600 text-white text-xs font-semibold shadow-lg shadow-indigo-500/25 transition-all transform active:scale-95">
+          <span>Open Dashboard</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= VIEW 1: MARKETING LANDING PAGE ================= -->
+  <main id="view-landing" class="flex-1 transition-opacity duration-300">
+    
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-28 overflow-hidden">
+      <!-- Glow Orbs -->
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-indigo-600/20 blur-[130px] rounded-full pointer-events-none"></div>
+
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        
+        <!-- Top Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-800/90 border border-white/10 text-xs text-zinc-300 mb-8 shadow-inner hover:border-indigo-500/40 transition-all cursor-pointer" onclick="switchView('dashboard')">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-medium">Backend Ready: Java 25 & Spring Boot 4.1.1</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-zinc-400"></i>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.1] mb-6">
+          Stop getting surprised by <span class="bg-gradient-to-r from-indigo-400 via-violet-300 to-emerald-400 bg-clip-text text-transparent">auto-renewals</span>.
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+          The autonomous financial dashboard that tracks recurring commitments, calculates dynamic burn rates, and slashes subscription waste automatically.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <button onclick="switchView('dashboard')" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-brand-600 hover:from-indigo-600 hover:to-brand-700 text-white font-semibold text-sm shadow-xl shadow-indigo-500/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5">
+            <i data-lucide="sparkles" class="w-4 h-4 text-indigo-200"></i>
+            <span>Test Live Interactive Demo</span>
+          </button>
+          <a href="#calculator" class="w-full sm:w-auto px-6 py-3.5 rounded-xl glass-card text-zinc-300 hover:text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="calculator" class="w-4 h-4 text-emerald-400"></i>
+            <span>Calculate Subscription Waste</span>
+          </a>
+        </div>
+
+        <!-- Trust Badges & Tech Stack Proof -->
+        <div class="pt-8 border-t border-white/5 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-zinc-500 font-mono">
+          <div class="flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> RFC 7807 Standard Error Contracts</div>
+          <div class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-indigo-400"></i> Stateless Dual-Token JWT</div>
+          <div class="flex items-center gap-2"><i data-lucide="database" class="w-4 h-4 text-blue-400"></i> Flyway Postgres 16 Schemas</div>
+          <div class="flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 text-amber-400"></i> Spring Boot Scheduled Sweeper</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Subscription Leak Calculator -->
+    <section id="calculator" class="py-20 bg-surface-900/60 border-y border-white/5 relative">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
+            <i data-lucide="calculator" class="w-4 h-4"></i> Interactive Simulator
+          </div>
+          <h2 class="text-3xl font-bold tracking-tight text-white mb-3">How Much Money Are You Leaking?</h2>
+          <p class="text-sm text-zinc-400">Most developers underestimate their monthly software spend by 35%. Calculate your real annual burn.</p>
+        </div>
+
+        <!-- Simulator Card -->
+        <div class="glass-card rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto shadow-2xl relative overflow-hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            
+            <!-- Sliders -->
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-2">
+                  <span class="text-zinc-300">Active Subscriptions</span>
+                  <span id="slider-count-val" class="text-indigo-400 font-mono text-sm">6 services</span>
+                </div>
+                <input type="range" id="slider-count" min="2" max="25" value="6" oninput="updateCalculator()" class="w-full h-2 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                <div class="flex justify-between text-[10px] text-zinc-500 mt-1 font-mono">
+                  <span>2</span><span>10</span><span>25+</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-semibold mb-2">
+                  <span class="text-zinc-300">Average Cost / Month</span>
+                  <span id="slider-cost-val" class="text-indigo-400 font-mono text-sm">$18.50 /mo</span>
+                </div>
+                <input type="range" id="slider-cost" min="5" max="100" value="18" step="1" oninput="updateCalculator()" class="w-full h-2 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                <div class="flex justify-between text-[10px] text-zinc-500 mt-1 font-mono">
+                  <span>$5</span><span>$50</span><span>$100</span>
+                </div>
+              </div>
+
+              <!-- Unused percentage estimation -->
+              <div class="p-4 rounded-xl bg-surface-800/80 border border-white/5 flex items-start gap-3">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+                <p class="text-xs text-zinc-400">Industry averages show ~28% of active subscriptions are forgotten or duplicate trials.</p>
+              </div>
+            </div>
+
+            <!-- Calculated Output Display -->
+            <div class="p-6 rounded-2xl bg-surface-800/90 border border-white/10 flex flex-col items-center text-center">
+              <span class="text-xs uppercase tracking-wider font-semibold text-zinc-400 mb-1">Your Total Annual Outflow</span>
+              <div id="calc-annual-burn" class="text-4xl sm:text-5xl font-black text-white font-mono tracking-tight my-2">$1,332</div>
+              <span class="text-xs text-zinc-400 mb-6 font-mono"><span id="calc-monthly-burn">$111.00</span> per month</span>
+
+              <div class="w-full pt-4 border-t border-white/10 flex justify-between items-center text-left">
+                <div>
+                  <span class="text-[11px] uppercase tracking-wider text-emerald-400 font-bold block">Annual Waste Saved</span>
+                  <span class="text-xs text-zinc-400">With TrackMySub Alert Engine</span>
+                </div>
+                <div id="calc-savings" class="text-xl font-bold text-emerald-400 font-mono">+$372/yr</div>
+              </div>
+
+              <button onclick="switchView('dashboard')" class="mt-6 w-full py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold text-xs transition-all shadow-md">
+                Claim My Dashboard
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Key Product Features Grid -->
+    <section id="features" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <h2 class="text-3xl font-extrabold text-white tracking-tight mb-4">Engineered for Complete Financial Control</h2>
+        <p class="text-sm text-zinc-400">Built using modern enterprise paradigms: Java 25, Spring Boot 4.1.1, PostgreSQL 16, and React 19.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Feature 1 -->
+        <div class="glass-card rounded-2xl p-7 relative group">
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-5 group-hover:scale-110 transition-transform">
+            <i data-lucide="bell-ring" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Automated Renewal Sweeper</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">Autonomous background cron jobs check renewal horizons daily at 08:00 UTC, triggering multi-channel notifications before cards get billed.</p>
+          <div class="text-[11px] font-mono text-indigo-400 flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i> Idempotent alerts
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-card rounded-2xl p-7 relative group">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5 group-hover:scale-110 transition-transform">
+            <i data-lucide="pie-chart" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Category Spending Analytics</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">Deep aggregation algorithms group expenses across Entertainment, Software, and Utilities with instant monthly burn visualizations.</p>
+          <div class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i> Recharts dynamic donuts
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-card rounded-2xl p-7 relative group">
+          <div class="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 mb-5 group-hover:scale-110 transition-transform">
+            <i data-lucide="tag" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Curated Deal Matching</h3>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">Matches your active subscriptions against verified database coupons, automatically surfacing discounts and promo codes with 1-click copying.</p>
+          <div class="text-[11px] font-mono text-rose-400 flex items-center gap-1.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i> Live coupon seed table
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ================= VIEW 2: AUTHENTICATED APP DASHBOARD ================= -->
+  <main id="view-dashboard" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-opacity duration-300">
+    
+    <!-- Header Controls & Greeting -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Overview Dashboard</h1>
+          <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">LIVE DATA</span>
+        </div>
+        <p class="text-xs text-zinc-400 mt-1">Logged in as <span class="text-zinc-200 font-semibold">Jane Doe</span> (jane@example.com) • Dual-token JWT authenticated</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button onclick="openAddModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-500 hover:from-brand-700 hover:to-indigo-600 text-white font-semibold text-xs shadow-lg shadow-indigo-500/20 flex items-center gap-2 transition-all transform hover:-translate-y-0.5">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>Add Subscription</span>
+        </button>
+        <button onclick="triggerSimulatedCron()" class="px-3.5 py-2.5 rounded-xl bg-surface-800 hover:bg-surface-700 border border-white/5 text-zinc-300 hover:text-white font-medium text-xs flex items-center gap-2 transition-all" title="Simulate Daily 08:00 UTC Renewal Sweep">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-indigo-400"></i>
+          <span>Simulate Cron</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trial Watchdog Banner (Highlighted Urgent Alert) -->
+    <div id="watchdog-banner" class="glass-card rounded-2xl p-4 sm:p-5 mb-8 border-amber-500/30 bg-amber-500/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+      <div class="flex items-start gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+          <i data-lucide="alert-octagon" class="w-5 h-5 animate-pulse"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-bold text-white">Trial Watchdog Alert: Figma Pro</h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">EXPIRES IN 48 HOURS</span>
+          </div>
+          <p class="text-xs text-zinc-400 mt-0.5">Your 14-day trial ends on <strong class="text-zinc-200">Oct 11, 2026</strong>. It will auto-charge <strong class="text-zinc-200">$15.00/month</strong>.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 self-end sm:self-center">
+        <button onclick="dismissWatchdog()" class="px-3 py-1.5 rounded-lg text-xs text-zinc-400 hover:text-white hover:bg-surface-700/60 transition-all">Keep Subscription</button>
+        <button onclick="alert('Guidance: Go to Figma Settings > Billing > Cancel Plan before Oct 11 to avoid auto-charge.')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 hover:bg-amber-500/30 text-xs font-semibold transition-all">How to Cancel</button>
+      </div>
+    </div>
+
+    <!-- ================= METRICS 4-CARD SUMMARY ================= -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      
+      <!-- Card 1: Total Monthly Spend -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-zinc-400">Total Monthly Spend</span>
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metric-monthly" class="text-3xl font-extrabold text-white font-mono">$64.97</span>
+          <span class="text-xs text-emerald-400 font-semibold flex items-center">+4.2%</span>
+        </div>
+        <span class="text-[11px] text-zinc-500 mt-1 block">Recalculated in real-time</span>
+      </div>
+
+      <!-- Card 2: Projected Yearly Spend -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-zinc-400">Annualized Outflow</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metric-yearly" class="text-3xl font-extrabold text-white font-mono">$779.64</span>
+          <span class="text-xs text-zinc-400 font-mono">/ year</span>
+        </div>
+        <span class="text-[11px] text-zinc-500 mt-1 block">Includes monthly & yearly billing</span>
+      </div>
+
+      <!-- Card 3: Active Subscriptions -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-zinc-400">Active Commitments</span>
+          <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metric-count" class="text-3xl font-extrabold text-white font-mono">4</span>
+          <span class="text-xs text-indigo-400 font-semibold">1 Trial Active</span>
+        </div>
+        <span class="text-[11px] text-zinc-500 mt-1 block">0 Overdue renewals</span>
+      </div>
+
+      <!-- Card 4: Curated Coupon Savings -->
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs uppercase tracking-wider font-semibold text-zinc-400">Discount Potential</span>
+          <div class="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-400">
+            <i data-lucide="badge-percent" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="metric-savings" class="text-3xl font-extrabold text-rose-400 font-mono">20% Off</span>
+          <span class="text-xs text-zinc-400 font-mono">3 codes</span>
+        </div>
+        <span class="text-[11px] text-zinc-500 mt-1 block">Matched against active subscriptions</span>
+      </div>
+
+    </div>
+
+    <!-- ================= MAIN SECTION: SUBSCRIPTIONS & ANALYTICS ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- LEFT 2 COLUMNS: SUBSCRIPTION LISTING & FILTERS -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Filter Bar & Search -->
+        <div class="glass-card rounded-2xl p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          
+          <!-- Category Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="category-filter-pills">
+            <button onclick="filterCategory('ALL')" class="cat-pill active px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500 text-white transition-all">All</button>
+            <button onclick="filterCategory('STREAMING')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white hover:bg-surface-700 transition-all">Streaming</button>
+            <button onclick="filterCategory('SOFTWARE')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white hover:bg-surface-700 transition-all">Software</button>
+            <button onclick="filterCategory('GAMING')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white hover:bg-surface-700 transition-all">Gaming</button>
+            <button onclick="filterCategory('UTILITIES')" class="cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white hover:bg-surface-700 transition-all">Utilities</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-full sm:w-48">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search services..." class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-surface-800/90 border border-white/5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500/50">
+          </div>
+        </div>
+
+        <!-- Subscriptions Cards Container -->
+        <div id="subscriptions-container" class="space-y-3.5">
+          <!-- Dynamically Rendered by JS -->
+        </div>
+
+      </div>
+
+      <!-- RIGHT 1 COLUMN: ANALYTICS DONUT & DEALS -->
+      <div class="space-y-6">
+        
+        <!-- Category Spend Donut Chart Card -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i> Category Breakdown
+            </h3>
+            <span class="text-[11px] text-zinc-400 font-mono">Monthly</span>
+          </div>
+
+          <!-- Chart Container -->
+          <div class="relative h-56 flex items-center justify-center">
+            <canvas id="categoryDonutChart"></canvas>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span class="text-xs text-zinc-400 font-medium">Top Category</span>
+              <span id="chart-center-val" class="text-base font-bold text-white font-mono">Streaming</span>
+            </div>
+          </div>
+
+          <!-- Chart Legend Items -->
+          <div id="chart-legend" class="mt-4 pt-4 border-t border-white/5 space-y-2 text-xs">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Curated Coupons & Promo Drawer -->
+        <div class="glass-card rounded-2xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i data-lucide="tag" class="w-4 h-4 text-rose-400"></i> Matched Coupons
+            </h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/20">FROM DB</span>
+          </div>
+
+          <div class="space-y-3" id="coupons-list">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Upcoming Renewals Mini-Calendar -->
+        <div class="glass-card rounded-2xl p-6">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+            <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i> Next 7 Days
+          </h3>
+          <div class="space-y-2.5 text-xs" id="upcoming-list">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= ADD SUBSCRIPTION MODAL ================= -->
+  <div id="add-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-md w-full border border-white/10 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-indigo-400"></i> New Subscription
+        </h3>
+        <button onclick="closeAddModal()" class="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-surface-700">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="add-sub-form" onsubmit="handleAddSubscription(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Service Name *</label>
+          <input type="text" id="modal-service-name" required placeholder="e.g. Netflix, ChatGPT Plus, AWS" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-800 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Category *</label>
+            <select id="modal-category" class="w-full px-3 py-2.5 rounded-xl bg-surface-800 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <option value="STREAMING">Streaming</option>
+              <option value="SOFTWARE">Software</option>
+              <option value="GAMING">Gaming</option>
+              <option value="UTILITIES">Utilities</option>
+              <option value="FITNESS">Fitness</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Billing Cycle *</label>
+            <select id="modal-billing-cycle" class="w-full px-3 py-2.5 rounded-xl bg-surface-800 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <option value="MONTHLY">Monthly</option>
+              <option value="YEARLY">Yearly</option>
+              <option value="QUARTERLY">Quarterly</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Cost ($ USD) *</label>
+            <input type="number" step="0.01" min="0" id="modal-cost" required placeholder="14.99" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-800 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Next Renewal Date *</label>
+            <input type="date" id="modal-renewal-date" required class="w-full px-3 py-2.5 rounded-xl bg-surface-800 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono">
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-between">
+          <label class="flex items-center gap-2 cursor-pointer text-xs text-zinc-300">
+            <input type="checkbox" id="modal-is-trial" class="rounded bg-surface-800 border-white/10 text-indigo-500 focus:ring-0">
+            <span>Currently Free Trial</span>
+          </label>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-2.5 border-t border-white/10">
+          <button type="button" onclick="closeAddModal()" class="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-500 text-white font-semibold text-xs shadow-md shadow-indigo-500/25">Save Subscription</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ================= FLOATING DOCK: PERSISTENT VIEW SWITCHER ================= -->
+  <div class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 glass-card px-4 py-2.5 rounded-full flex items-center gap-3 shadow-2xl border-white/15">
+    <div class="flex items-center gap-2 pr-3 border-r border-white/10">
+      <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+      <span class="text-xs font-bold text-white uppercase tracking-wider">Prototype Mode</span>
+    </div>
+    <button onclick="switchView('landing')" id="dock-btn-landing" class="px-3 py-1 rounded-full text-xs font-medium text-white bg-indigo-600 transition-all">
+      Landing Page
+    </button>
+    <button onclick="switchView('dashboard')" id="dock-btn-dashboard" class="px-3 py-1 rounded-full text-xs font-medium text-zinc-400 hover:text-white transition-all">
+      App Dashboard
+    </button>
+  </div>
+
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div id="toast" class="fixed top-20 right-6 z-50 hidden glass-card px-4 py-3 rounded-xl border border-indigo-500/30 shadow-2xl flex items-center gap-3 transition-all transform translate-y-2">
+    <i id="toast-icon" data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-msg" class="text-xs font-semibold text-zinc-200">Operation Successful</span>
+  </div>
+
+
+  <!-- ================= SCRIPT LOGIC ================= -->
+  <script>
+    // Initial State seeded from TrackMySub database schema (V1 & V2)
+    let subscriptions = [
+      {
+        id: "e7b0a880-9289-4e5a-939a-6c1f9e2bfb73",
+        serviceName: "Netflix Premium",
+        category: "STREAMING",
+        cost: 19.99,
+        billingCycle: "MONTHLY",
+        status: "ACTIVE",
+        nextRenewalDate: "2026-10-15",
+        trialEndDate: null,
+        color: "#E50914"
+      },
+      {
+        id: "f1a2b3c4-1234-5678-90ab-cdef12345678",
+        serviceName: "GitHub Copilot",
+        category: "SOFTWARE",
+        cost: 10.00,
+        billingCycle: "MONTHLY",
+        status: "ACTIVE",
+        nextRenewalDate: "2026-10-22",
+        trialEndDate: null,
+        color: "#6e40c9"
+      },
+      {
+        id: "a9b8c7d6-9876-5432-10fe-dcba98765432",
+        serviceName: "Spotify Family",
+        category: "STREAMING",
+        cost: 16.99,
+        billingCycle: "MONTHLY",
+        status: "ACTIVE",
+        nextRenewalDate: "2026-10-18",
+        trialEndDate: null,
+        color: "#1DB954"
+      },
+      {
+        id: "c3d4e5f6-5555-4444-3333-222211110000",
+        serviceName: "AWS Cloud Services",
+        category: "UTILITIES",
+        cost: 17.99,
+        billingCycle: "MONTHLY",
+        status: "ACTIVE",
+        nextRenewalDate: "2026-10-31",
+        trialEndDate: null,
+        color: "#FF9900"
+      },
+      {
+        id: "99887766-aaaa-bbbb-cccc-ddddeeeeffff",
+        serviceName: "Figma Professional",
+        category: "SOFTWARE",
+        cost: 15.00,
+        billingCycle: "MONTHLY",
+        status: "TRIAL",
+        nextRenewalDate: "2026-10-11",
+        trialEndDate: "2026-10-11",
+        color: "#F24E1E"
+      }
+    ];
+
+    const coupons = [
+      { serviceName: "Netflix", code: "NETFLIX20", discount: "20% OFF", desc: "Save 20% on next 3 billing cycles." },
+      { serviceName: "Spotify", code: "STUDENT50", discount: "50% OFF", desc: "Verified student tier discount." },
+      { serviceName: "GitHub", code: "GITHUBDEV", discount: "FREE TRIAL", desc: "Extended GitHub Copilot trial period." }
+    ];
+
+    let notifications = [
+      { id: 1, title: "Figma Pro Trial Ending", desc: "Trial ends in 48 hours ($15.00/mo charge).", time: "10 mins ago", type: "urgent" },
+      { id: 2, title: "Netflix Renewal", desc: "Renewal reminder: $19.99 will be charged on Oct 15.", time: "2 hours ago", type: "info" }
+    ];
+
+    let activeCategory = 'ALL';
+    let searchQuery = '';
+    let donutChartInstance = null;
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      initDonutChart();
+      renderDashboard();
+      updateCalculator();
+      
+      // Default renewal date for modal (today + 30 days)
+      const d = new Date();
+      d.setDate(d.getDate() + 30);
+      document.getElementById('modal-renewal-date').value = d.toISOString().split('T')[0];
+    });
+
+    // View Switching Logic
+    function switchView(viewName) {
+      const landing = document.getElementById('view-landing');
+      const dashboard = document.getElementById('view-dashboard');
+      
+      const navLanding = document.getElementById('nav-btn-landing');
+      const navDashboard = document.getElementById('nav-btn-dashboard');
+      const dockLanding = document.getElementById('dock-btn-landing');
+      const dockDashboard = document.getElementById('dock-btn-dashboard');
+
+      if (viewName === 'dashboard') {
+        landing.classList.add('hidden');
+        dashboard.classList.remove('hidden');
+        
+        navLanding.className = "px-4 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white hover:bg-surface-700/40 transition-all";
+        navDashboard.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all text-white bg-surface-700/80 shadow-sm";
+        dockLanding.className = "px-3 py-1 rounded-full text-xs font-medium text-zinc-400 hover:text-white transition-all";
+        dockDashboard.className = "px-3 py-1 rounded-full text-xs font-medium text-white bg-indigo-600 transition-all";
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { if (donutChartInstance) donutChartInstance.resize(); }, 100);
+      } else {
+        dashboard.classList.add('hidden');
+        landing.classList.remove('hidden');
+
+        navDashboard.className = "px-4 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white hover:bg-surface-700/40 transition-all";
+        navLanding.className = "px-4 py-1.5 rounded-full text-xs font-medium transition-all text-white bg-surface-700/80 shadow-sm";
+        dockDashboard.className = "px-3 py-1 rounded-full text-xs font-medium text-zinc-400 hover:text-white transition-all";
+        dockLanding.className = "px-3 py-1 rounded-full text-xs font-medium text-white bg-indigo-600 transition-all";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      lucide.createIcons();
+    }
+
+    // Render Dashboard Items
+    function renderDashboard() {
+      renderMetrics();
+      renderSubscriptionList();
+      renderCoupons();
+      renderUpcomingTimeline();
+      updateDonutChart();
+      renderNotifications();
+      lucide.createIcons();
+    }
+
+    // Metrics Calculation
+    function renderMetrics() {
+      const activeSubs = subscriptions.filter(s => s.status !== 'CANCELLED');
+      const totalMonthly = activeSubs.reduce((acc, curr) => acc + curr.cost, 0);
+      const totalYearly = totalMonthly * 12;
+
+      document.getElementById('metric-monthly').innerText = `$${totalMonthly.toFixed(2)}`;
+      document.getElementById('metric-yearly').innerText = `$${totalYearly.toFixed(2)}`;
+      document.getElementById('metric-count').innerText = `${activeSubs.length}`;
+    }
+
+    // Render Subscriptions List
+    function renderSubscriptionList() {
+      const container = document.getElementById('subscriptions-container');
+      container.innerHTML = '';
+
+      let filtered = subscriptions.filter(s => {
+        const matchesCategory = (activeCategory === 'ALL' || s.category === activeCategory);
+        const matchesSearch = s.serviceName.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-8 text-center text-zinc-400">
+            <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-zinc-500"></i>
+            <p class="text-sm">No subscriptions match your filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(sub => {
+        const isTrial = sub.status === 'TRIAL';
+        const card = document.createElement('div');
+        card.className = `glass-card rounded-2xl p-4.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all hover:bg-surface-800/80`;
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl flex items-center justify-center font-bold text-white text-base shadow-md shrink-0" style="background-color: ${sub.color || '#4f46e5'}">
+              ${sub.serviceName.substring(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-bold text-sm text-white">${sub.serviceName}</h4>
+                ${isTrial ? `
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> TRIAL
+                  </span>
+                ` : `
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    ACTIVE
+                  </span>
+                `}
+              </div>
+              <div class="flex items-center gap-3 text-xs text-zinc-400 mt-1">
+                <span class="capitalize">${sub.category.toLowerCase()}</span>
+                <span>•</span>
+                <span class="capitalize">${sub.billingCycle.toLowerCase()}</span>
+                <span>•</span>
+                <span class="font-mono text-zinc-300">Renews: ${sub.nextRenewalDate}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
+            <div class="text-left sm:text-right">
+              <span class="text-base font-extrabold text-white font-mono">$${sub.cost.toFixed(2)}</span>
+              <span class="text-[10px] text-zinc-500 block uppercase font-mono">/ mo</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button onclick="toggleSubscriptionStatus('${sub.id}')" class="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-surface-700/60 transition-all" title="Toggle status">
+                <i data-lucide="${sub.status === 'PAUSED' ? 'play' : 'pause'}" class="w-4 h-4"></i>
+              </button>
+              <button onclick="deleteSubscription('${sub.id}')" class="p-2 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all" title="Delete subscription">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Curated Coupons List
+    function renderCoupons() {
+      const container = document.getElementById('coupons-list');
+      container.innerHTML = '';
+      coupons.forEach(coupon => {
+        const item = document.createElement('div');
+        item.className = "p-3 rounded-xl bg-surface-800/80 border border-white/5 flex items-center justify-between";
+        item.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs text-white">${coupon.serviceName}</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold">${coupon.discount}</span>
+            </div>
+            <span class="text-[11px] text-zinc-400 block">${coupon.desc}</span>
+          </div>
+          <button onclick="copyCouponCode('${coupon.code}')" class="px-2.5 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-xs font-mono font-bold border border-indigo-500/20 transition-all flex items-center gap-1">
+            <span>${coupon.code}</span>
+            <i data-lucide="copy" class="w-3 h-3"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Upcoming Timeline
+    function renderUpcomingTimeline() {
+      const container = document.getElementById('upcoming-list');
+      container.innerHTML = '';
+      const sorted = [...subscriptions].sort((a,b) => a.nextRenewalDate.localeCompare(b.nextRenewalDate));
+      
+      sorted.slice(0, 3).forEach(s => {
+        const item = document.createElement('div');
+        item.className = "flex items-center justify-between py-1.5 border-b border-white/5 last:border-0";
+        item.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full" style="background-color: ${s.color || '#6366f1'}"></span>
+            <span class="text-zinc-200 font-medium">${s.serviceName}</span>
+          </div>
+          <div class="text-right font-mono text-[11px]">
+            <span class="text-zinc-400">${s.nextRenewalDate.slice(5)}</span>
+            <span class="text-white font-bold ml-2">$${s.cost.toFixed(2)}</span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Chart.js Category Donut Initialization
+    function initDonutChart() {
+      const ctx = document.getElementById('categoryDonutChart').getContext('2d');
+      const categories = ['STREAMING', 'SOFTWARE', 'UTILITIES', 'GAMING'];
+      
+      donutChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Streaming', 'Software', 'Utilities', 'Gaming'],
+          datasets: [{
+            data: [36.98, 25.00, 17.99, 0],
+            backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ec4899'],
+            borderWidth: 0,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '76%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` $${context.parsed.toFixed(2)} /mo`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update Donut Chart Data
+    function updateDonutChart() {
+      if (!donutChartInstance) return;
+      const catTotals = { 'STREAMING': 0, 'SOFTWARE': 0, 'UTILITIES': 0, 'GAMING': 0, 'FITNESS': 0 };
+      
+      subscriptions.forEach(s => {
+        if (s.status !== 'CANCELLED') {
+          catTotals[s.category] = (catTotals[s.category] || 0) + s.cost;
+        }
+      });
+
+      donutChartInstance.data.datasets[0].data = [
+        catTotals['STREAMING'] || 0,
+        catTotals['SOFTWARE'] || 0,
+        catTotals['UTILITIES'] || 0,
+        catTotals['GAMING'] || 0
+      ];
+      donutChartInstance.update();
+
+      // Update Legend
+      const legend = document.getElementById('chart-legend');
+      const colors = ['#6366f1', '#10b981', '#f59e0b', '#ec4899'];
+      const names = ['Streaming', 'Software', 'Utilities', 'Gaming'];
+      
+      legend.innerHTML = '';
+      names.forEach((name, i) => {
+        const val = donutChartInstance.data.datasets[0].data[i];
+        if (val > 0) {
+          legend.innerHTML += `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${colors[i]}"></span>
+                <span class="text-zinc-300">${name}</span>
+              </div>
+              <span class="font-mono text-zinc-400 font-semibold">$${val.toFixed(2)}</span>
+            </div>
+          `;
+        }
+      });
+    }
+
+    // Filter by Category
+    function filterCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.className = "cat-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white hover:bg-surface-700 transition-all";
+      });
+      event.target.className = "cat-pill active px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500 text-white transition-all";
+      renderSubscriptionList();
+      lucide.createIcons();
+    }
+
+    // Search Handler
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value;
+      renderSubscriptionList();
+      lucide.createIcons();
+    }
+
+    // Add Subscription Modal Controls
+    function openAddModal() {
+      document.getElementById('add-modal').classList.remove('hidden');
+    }
+    function closeAddModal() {
+      document.getElementById('add-modal').classList.add('hidden');
+    }
+
+    function handleAddSubscription(e) {
+      e.preventDefault();
+      const serviceName = document.getElementById('modal-service-name').value;
+      const category = document.getElementById('modal-category').value;
+      const billingCycle = document.getElementById('modal-billing-cycle').value;
+      const cost = parseFloat(document.getElementById('modal-cost').value);
+      const renewalDate = document.getElementById('modal-renewal-date').value;
+      const isTrial = document.getElementById('modal-is-trial').checked;
+
+      const colors = ['#6366f1', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      const newSub = {
+        id: crypto.randomUUID(),
+        serviceName,
+        category,
+        cost,
+        billingCycle,
+        status: isTrial ? 'TRIAL' : 'ACTIVE',
+        nextRenewalDate: renewalDate,
+        trialEndDate: isTrial ? renewalDate : null,
+        color: randomColor
+      };
+
+      subscriptions.unshift(newSub);
+      closeAddModal();
+      renderDashboard();
+      showToast(`Added ${serviceName} ($${cost.toFixed(2)}/mo)`);
+      confetti({ particleCount: 60, spread: 60, origin: { y: 0.8 } });
+      document.getElementById('add-sub-form').reset();
+    }
+
+    // Delete Subscription
+    function deleteSubscription(id) {
+      const idx = subscriptions.findIndex(s => s.id === id);
+      if (idx !== -1) {
+        const deleted = subscriptions.splice(idx, 1)[0];
+        renderDashboard();
+        showToast(`Removed ${deleted.serviceName}`);
+      }
+    }
+
+    // Toggle Subscription Status (Pause / Play)
+    function toggleSubscriptionStatus(id) {
+      const sub = subscriptions.find(s => s.id === id);
+      if (sub) {
+        sub.status = sub.status === 'PAUSED' ? 'ACTIVE' : 'PAUSED';
+        renderDashboard();
+        showToast(`${sub.serviceName} marked as ${sub.status}`);
+      }
+    }
+
+    // Calculator Math
+    function updateCalculator() {
+      const count = parseInt(document.getElementById('slider-count').value);
+      const cost = parseFloat(document.getElementById('slider-cost').value);
+
+      document.getElementById('slider-count-val').innerText = `${count} services`;
+      document.getElementById('slider-cost-val').innerText = `$${cost.toFixed(2)} /mo`;
+
+      const monthly = count * cost;
+      const annual = monthly * 12;
+      const savings = annual * 0.28; // 28% average waste
+
+      document.getElementById('calc-monthly-burn').innerText = `$${monthly.toFixed(2)}`;
+      document.getElementById('calc-annual-burn').innerText = `$${Math.round(annual).toLocaleString()}`;
+      document.getElementById('calc-savings').innerText = `+$${Math.round(savings).toLocaleString()}/yr`;
+    }
+
+    // Copy Coupon Code
+    function copyCouponCode(code) {
+      navigator.clipboard.writeText(code);
+      showToast(`Copied code "${code}" to clipboard!`);
+    }
+
+    // Notifications
+    function toggleNotifications() {
+      const panel = document.getElementById('notifications-panel');
+      panel.classList.toggle('hidden');
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById('notifications-list');
+      list.innerHTML = '';
+      notifications.forEach(n => {
+        list.innerHTML += `
+          <div class="p-3 rounded-xl bg-surface-800/80 border border-white/5 flex items-start gap-3">
+            <span class="w-2 h-2 rounded-full ${n.type === 'urgent' ? 'bg-amber-400' : 'bg-indigo-400'} mt-1.5 shrink-0"></span>
+            <div class="flex-1">
+              <h5 class="text-xs font-bold text-white">${n.title}</h5>
+              <p class="text-[11px] text-zinc-400">${n.desc}</p>
+              <span class="text-[10px] text-zinc-500 font-mono mt-1 block">${n.time}</span>
+            </div>
+          </div>
+        `;
+      });
+      document.getElementById('unread-badge').innerText = notifications.length;
+    }
+
+    function markAllNotificationsRead() {
+      notifications = [];
+      renderNotifications();
+      document.getElementById('unread-badge').classList.add('hidden');
+      showToast("All notifications marked as read");
+    }
+
+    // Simulate Daily Cron Trigger
+    function triggerSimulatedCron() {
+      showToast("Triggered Spring Boot 08:00 UTC Renewal Sweep...");
+      setTimeout(() => {
+        notifications.unshift({
+          id: Date.now(),
+          title: "Cron Sweep Complete",
+          desc: "Identified 1 upcoming renewal in next 3 days.",
+          time: "Just now",
+          type: "info"
+        });
+        document.getElementById('unread-badge').classList.remove('hidden');
+        renderNotifications();
+        showToast("Renewal Sweep: 1 notification generated");
+      }, 900);
+    }
+
+    function dismissWatchdog() {
+      document.getElementById('watchdog-banner').classList.add('hidden');
+      showToast("Figma Pro Watchdog dismissed");
+    }
+
+    // Toast Notification helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const msgElem = document.getElementById('toast-msg');
+      msgElem.innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

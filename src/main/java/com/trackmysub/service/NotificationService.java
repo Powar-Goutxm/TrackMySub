@@ -51,6 +51,15 @@ public class NotificationService {
     }
 
     @Transactional
+    public void markAllAsRead(UUID userId) {
+        List<Notification> unreadList = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
+                .filter(n -> !n.isRead())
+                .toList();
+        unreadList.forEach(n -> n.setRead(true));
+        notificationRepository.saveAll(unreadList);
+    }
+
+    @Transactional
     public void createNotification(User user, Subscription subscription, NotificationType type, NotificationChannel channel, String title, String message) {
         Notification notification = new Notification();
         notification.setUser(user);

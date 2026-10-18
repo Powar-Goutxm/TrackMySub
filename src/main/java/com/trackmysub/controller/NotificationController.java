@@ -19,10 +19,14 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final AuthenticatedUserService authenticatedUserService;
+    private final com.trackmysub.scheduler.AlertScheduler alertScheduler;
 
-    public NotificationController(NotificationService notificationService, AuthenticatedUserService authenticatedUserService) {
+    public NotificationController(NotificationService notificationService,
+                                  AuthenticatedUserService authenticatedUserService,
+                                  com.trackmysub.scheduler.AlertScheduler alertScheduler) {
         this.notificationService = notificationService;
         this.authenticatedUserService = authenticatedUserService;
+        this.alertScheduler = alertScheduler;
     }
 
     @GetMapping
@@ -32,7 +36,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getUserNotifications(userId));
     }
 
-    @GetMapping("/unread")
+    @GetMapping({"/unread", "/unread-count"})
     @Operation(summary = "Get unread notification count")
     public ResponseEntity<UnreadCountResponse> getUnreadCount() {
         UUID userId = authenticatedUserService.getCurrentUserId();
@@ -44,5 +48,20 @@ public class NotificationController {
     public ResponseEntity<NotificationResponse> markAsRead(@PathVariable UUID id) {
         UUID userId = authenticatedUserService.getCurrentUserId();
         return ResponseEntity.ok(notificationService.markAsRead(userId, id));
+    }
+
+    @PostMapping("/mark-all-read")
+    @Operation(summary = "Mark all notifications as read")
+    public ResponseEntity<java.util.Map<String, Boolean>> markAllRead() {
+        UUID userId = authenticatedUserService.getCurrentUserId();
+        notificationService.markAllAsRead(userId);
+        return ResponseEntity.ok(java.util.Map.of("success", true));
+    }
+
+    @PostMapping("/check-alerts")
+    @Operation(summary = "Trigger alert sweep")
+    public ResponseEntity<java.util.Map<String, String>> checkAlerts() {
+        alertScheduler.checkAndSendAlerts();
+        return ResponseEntity.ok(java.util.Map.of("message", "Alert check executed successfully"));
     }
 }
