@@ -5,7 +5,7 @@ target/
 # Maven Wrapper
 !.mvn/wrapper/maven-wrapper.jar
 
-# IDEs
+# IDEs & Editors
 .idea/
 *.iml
 *.iws
@@ -24,5 +24,18 @@ Thumbs.db
 .env
 application-local.yml
 
+# Frontend
+node_modules/
+dist/
+
 # Teaching Workspace & Interactive Course Website (Local Only)
 learn/
+
+# AI Agent, Planning & Local Scaffolding (Local Only)
+.agents/
+.planning/
+skills-lock.json
+AGENTS.md
+design.md
+docs/
+prototypes/

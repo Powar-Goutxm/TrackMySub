@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#08090D] text-slate-100;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Lenis smooth scrolling rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom font utilities */
+.font-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-hand {
+  font-family: 'Caveat', cursive;
+}
+
+.font-mono-numbers {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08090D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 92, 53, 0.6);
+}
+
+/* Glow effects and subtle atmospheric gradients */
+.coral-glow {
+  box-shadow: 0 0 50px -10px rgba(255, 92, 53, 0.35);
+}
+
+.subtle-glass {
+  background: rgba(20, 24, 36, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Design System: Forensic Ledger & Hardware Tokens (design.md) */
+:root {
+  --color-obsidian: #08090D;
+  --color-graphite: #141824;
+  --color-graphite-elevated: #1F2433;
+  --color-obsidian-inset: #0B0D11;
+  --color-ivory: #F2EEE7;
+  --color-coral: #FF5C38;
+  --color-amber: #E08A3C;
+  --color-slate-muted: #8E97A4;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+}
+
+.typo-button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.double-bezel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+  padding: 1.5px;
+  border-radius: 1rem;
+}
+
+.double-bezel-inner {
+  background: #0F131D;
+  border-radius: calc(1rem - 1.5px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
