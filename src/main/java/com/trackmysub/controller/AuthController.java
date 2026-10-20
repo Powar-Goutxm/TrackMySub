@@ -4,12 +4,16 @@ import com.trackmysub.dto.AuthResponse;
 import com.trackmysub.dto.LoginRequest;
 import com.trackmysub.dto.RegisterRequest;
 import com.trackmysub.dto.TokenRefreshRequest;
+import com.trackmysub.dto.UserProfileResponse;
+import com.trackmysub.entity.User;
 import com.trackmysub.service.AuthService;
+import com.trackmysub.service.AuthenticatedUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +28,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final AuthenticatedUserService authenticatedUserService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AuthenticatedUserService authenticatedUserService) {
         this.authService = authService;
+        this.authenticatedUserService = authenticatedUserService;
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Get current user profile", description = "Returns details of the currently authenticated user.")
+    public ResponseEntity<UserProfileResponse> getCurrentUser() {
+        User user = authenticatedUserService.getCurrentUser();
+        return ResponseEntity.ok(new UserProfileResponse(
+            user.getId(),
+            user.getEmail(),
+            user.getName(),
+            user.getCreatedAt()
+        ));
     }
 
     @PostMapping("/register")
