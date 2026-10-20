@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Lock, Mail, CreditCard } from 'lucide-react';
-import { api } from '../../api';
+import { api, tokenStorage } from '../../api';
 import { User } from '../../types';
 
 interface FinalCtaSectionProps {
@@ -24,8 +24,13 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
     setError(null);
     try {
       await api.login(email, password);
-      const me = await api.getMe();
-      onSuccessAuth(me);
+      try {
+        const me = await api.getMe();
+        onSuccessAuth(me);
+      } catch (meErr: any) {
+        tokenStorage.clearTokens();
+        throw meErr;
+      }
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
     } finally {

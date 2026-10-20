@@ -31,7 +31,7 @@ public class CouponService {
     public List<CouponResponse> getAllActiveCoupons() {
         return couponRepository.findByIsActiveTrue().stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<CouponResponse> getCouponsForUserSubscriptions(UUID userId) {
@@ -49,7 +49,7 @@ public class CouponService {
         
         return relevantCoupons.stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CouponResponse mapToResponse(Coupon c) {

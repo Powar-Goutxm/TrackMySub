@@ -16,15 +16,15 @@ interface SubscriptionModalProps {
 }
 
 const PRESET_SERVICES = [
-  { name: 'Netflix', category: 'STREAMING' as SubscriptionCategory, cost: 649, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Spotify', category: 'STREAMING' as SubscriptionCategory, cost: 179, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Notion', category: 'SOFTWARE' as SubscriptionCategory, cost: 500, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Adobe CC', category: 'SOFTWARE' as SubscriptionCategory, cost: 1675, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'ChatGPT Plus', category: 'SOFTWARE' as SubscriptionCategory, cost: 1999, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'YouTube Premium', category: 'STREAMING' as SubscriptionCategory, cost: 149, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Amazon Prime', category: 'UTILITIES' as SubscriptionCategory, cost: 299, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Google One', category: 'UTILITIES' as SubscriptionCategory, cost: 130, cycle: 'MONTHLY' as BillingCycle },
-  { name: 'Swiggy One', category: 'UTILITIES' as SubscriptionCategory, cost: 299, cycle: 'YEARLY' as BillingCycle }
+  { name: 'Netflix', category: 'ENTERTAINMENT' as SubscriptionCategory, cost: 649, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Spotify', category: 'ENTERTAINMENT' as SubscriptionCategory, cost: 179, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Notion', category: 'PRODUCTIVITY' as SubscriptionCategory, cost: 500, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Adobe CC', category: 'PRODUCTIVITY' as SubscriptionCategory, cost: 1675, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'ChatGPT Plus', category: 'PRODUCTIVITY' as SubscriptionCategory, cost: 1999, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'YouTube Premium', category: 'ENTERTAINMENT' as SubscriptionCategory, cost: 149, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Amazon Prime', category: 'OTHER' as SubscriptionCategory, cost: 299, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Google One', category: 'CLOUD' as SubscriptionCategory, cost: 130, cycle: 'MONTHLY' as BillingCycle },
+  { name: 'Swiggy One', category: 'OTHER' as SubscriptionCategory, cost: 299, cycle: 'YEARLY' as BillingCycle }
 ];
 
 export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
@@ -34,7 +34,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   subscriptionToEdit
 }) => {
   const [serviceName, setServiceName] = useState('');
-  const [category, setCategory] = useState<SubscriptionCategory>('STREAMING');
+  const [category, setCategory] = useState<SubscriptionCategory>('ENTERTAINMENT');
   const [cost, setCost] = useState<string>('499');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('MONTHLY');
   const [status, setStatus] = useState<SubscriptionStatus>('ACTIVE');
@@ -54,7 +54,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       setTrialEndDate(subscriptionToEdit.trialEndDate || '');
     } else {
       setServiceName('');
-      setCategory('STREAMING');
+      setCategory('ENTERTAINMENT');
       setCost('499');
       setBillingCycle('MONTHLY');
       setStatus('ACTIVE');
@@ -187,11 +187,15 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 onChange={(e) => setCategory(e.target.value as SubscriptionCategory)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#FF5C38] cursor-pointer"
               >
-                <option value="STREAMING">Streaming</option>
-                <option value="SOFTWARE">Software & SaaS</option>
+                <option value="ENTERTAINMENT">Entertainment & Streaming</option>
+                <option value="PRODUCTIVITY">Productivity & Software</option>
+                <option value="CLOUD">Cloud & Hosting</option>
+                <option value="FINANCE">Finance & Banking</option>
+                <option value="HEALTH">Health & Fitness</option>
+                <option value="EDUCATION">Education & Courses</option>
+                <option value="NEWS">News & Media</option>
+                <option value="SOCIAL">Social & Community</option>
                 <option value="GAMING">Gaming</option>
-                <option value="UTILITIES">Utilities & Cloud</option>
-                <option value="FITNESS">Fitness & Health</option>
                 <option value="OTHER">Other</option>
               </select>
             </div>

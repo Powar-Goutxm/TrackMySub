@@ -1,7 +1,17 @@
-export type BillingCycle = 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
-export type SubscriptionCategory = 'STREAMING' | 'SOFTWARE' | 'GAMING' | 'UTILITIES' | 'FITNESS' | 'OTHER';
+export type BillingCycle = 'MONTHLY' | 'YEARLY';
+export type SubscriptionCategory =
+  | 'ENTERTAINMENT'
+  | 'PRODUCTIVITY'
+  | 'CLOUD'
+  | 'FINANCE'
+  | 'HEALTH'
+  | 'EDUCATION'
+  | 'NEWS'
+  | 'SOCIAL'
+  | 'GAMING'
+  | 'OTHER';
 export type SubscriptionStatus = 'ACTIVE' | 'CANCELLED' | 'PAUSED' | 'TRIAL';
-export type NotificationType = 'RENEWAL_REMINDER' | 'TRIAL_EXPIRY' | 'COUPON_AVAILABLE' | 'SYSTEM';
+export type NotificationType = 'RENEWAL_REMINDER' | 'TRIAL_EXPIRY';
 export type NotificationChannel = 'IN_APP' | 'EMAIL';
 
 export interface User {
@@ -13,7 +23,7 @@ export interface User {
 
 export interface Subscription {
   id: string;
-  userId: string;
+  userId?: string;
   serviceName: string;
   category: SubscriptionCategory;
   cost: number;
@@ -37,8 +47,8 @@ export interface SubscriptionRequest {
 
 export interface Notification {
   id: string;
-  userId: string;
   subscriptionId?: string | null;
+  serviceName?: string | null;
   type: NotificationType;
   channel: NotificationChannel;
   title: string;

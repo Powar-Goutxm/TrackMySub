@@ -33,7 +33,7 @@ export const NotificationsTab: React.FC<NotificationsTabProps> = ({
 
   const filtered = notifications.filter((n) => (filter === 'unread' ? !n.isRead : true));
 
-  const getNotifIcon = (type: NotificationType) => {
+  const getNotifIcon = (type: string) => {
     switch (type) {
       case 'RENEWAL_REMINDER':
         return (

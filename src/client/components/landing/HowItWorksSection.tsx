@@ -25,7 +25,6 @@ const CATEGORY_DATA = [
 
 export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onLaunchApp }) => {
   const [activeStep, setActiveStep] = useState<number>(3); // 3 = Manage
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   const steps = [
     { num: '01', title: 'Connect', desc: 'Add recurring services or sync with statements in 60 seconds.' },
@@ -100,6 +99,10 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onLaunchAp
             );
           })}
         </motion.div>
+
+        <p className="text-center text-sm text-slate-300 mb-8 max-w-xl mx-auto" aria-live="polite">
+          {steps[activeStep - 1].desc}
+        </p>
 
         {/* Interactive Embedded Live Dashboard Sandbox with Scroll Animation */}
         <motion.div
@@ -238,8 +241,6 @@ export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ onLaunchAp
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.06 }}
-                    onMouseEnter={() => setHoveredCategory(cat.name)}
-                    onMouseLeave={() => setHoveredCategory(null)}
                     className="flex items-center justify-between py-1 text-xs transition cursor-default"
                   >
                     <div className="flex items-center space-x-2">

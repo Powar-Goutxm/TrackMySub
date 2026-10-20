@@ -38,7 +38,7 @@ export const SubscriptionsTab: React.FC<SubscriptionsTabProps> = ({
   const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
   const [sortBy, setSortBy] = useState<'renewal' | 'cost_desc' | 'cost_asc' | 'name'>('renewal');
 
-  const categories = ['ALL', 'STREAMING', 'SOFTWARE', 'GAMING', 'UTILITIES', 'FITNESS', 'OTHER'];
+  const categories = ['ALL', 'ENTERTAINMENT', 'PRODUCTIVITY', 'CLOUD', 'FINANCE', 'HEALTH', 'EDUCATION', 'NEWS', 'SOCIAL', 'GAMING', 'OTHER'];
   const statuses = ['ALL', 'ACTIVE', 'TRIAL', 'PAUSED', 'CANCELLED'];
 
   // Filter & sort
@@ -252,6 +252,7 @@ export const SubscriptionsTab: React.FC<SubscriptionsTabProps> = ({
                 {/* Bottom card actions */}
                 <div className="mt-5 pt-3 border-t border-white/[0.08] flex items-center justify-between">
                   {/* Status quick toggle */}
+                  {(sub.status === 'ACTIVE' || sub.status === 'PAUSED') ? (
                   <button
                     onClick={() => onToggleStatus(sub)}
                     className="text-xs font-semibold text-slate-400 hover:text-white flex items-center space-x-1 transition cursor-pointer"
@@ -268,6 +269,7 @@ export const SubscriptionsTab: React.FC<SubscriptionsTabProps> = ({
                       </>
                     )}
                   </button>
+                  ) : <div />}
 
                   <div className="flex items-center space-x-1">
                     <button

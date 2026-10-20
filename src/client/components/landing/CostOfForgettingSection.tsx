@@ -14,20 +14,25 @@ interface MonthData {
   breakdown: Array<{ name: string; cost: number; unused?: boolean }>;
 }
 
-const MONTHS_DATA: MonthData[] = [
-  { month: 'Jan', spend: 2150, waste: 300, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 130 }, { name: 'Notion', cost: 142 }] },
-  { month: 'Feb', spend: 2150, waste: 300, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 130 }, { name: 'Notion', cost: 142 }] },
-  { month: 'Mar', spend: 2280, waste: 350, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'ChatGPT Plus', cost: 1999 }, { name: 'Google One', cost: 130 }] },
-  { month: 'Apr', spend: 2320, waste: 350, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Hotstar', cost: 499 }] },
-  { month: 'May', spend: 2450, waste: 400, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Swiggy One', cost: 299 }, { name: 'Adobe CC', cost: 1675, unused: true }] },
-  { month: 'Jun', spend: 2500, waste: 450, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Swiggy One', cost: 299 }, { name: 'Adobe CC', cost: 1675, unused: true }] },
-  { month: 'Jul', spend: 2650, waste: 500, hikes: { name: 'Netflix', oldPrice: 499, newPrice: 649 }, breakdown: [{ name: 'Netflix (Hiked)', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }] },
-  { month: 'Aug', spend: 2800, waste: 550, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }, { name: 'Google One', cost: 210 }] },
-  { month: 'Sep', spend: 2850, waste: 600, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }, { name: 'Zomato Gold', cost: 249 }] },
-  { month: 'Oct', spend: 2950, waste: 650, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }, { name: 'Apple One', cost: 365 }] },
-  { month: 'Nov', spend: 3050, waste: 700, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }, { name: 'YouTube Prem', cost: 299 }] },
-  { month: 'Dec', spend: 3120, waste: 750, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Adobe CC', cost: 1675, unused: true }, { name: 'Swiggy One', cost: 299 }] }
+const RAW_MONTHS: Array<Omit<MonthData, 'spend'> & { breakdown: Array<{ name: string; cost: number; unused?: boolean }> }> = [
+  { month: 'Jan', waste: 300, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 130 }, { name: 'Notion', cost: 142 }] },
+  { month: 'Feb', waste: 300, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 130 }, { name: 'Notion', cost: 142 }] },
+  { month: 'Mar', waste: 350, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 130 }, { name: 'Notion', cost: 272 }] },
+  { month: 'Apr', waste: 350, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Hotstar', cost: 442 }] },
+  { month: 'May', waste: 400, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Swiggy One', cost: 299 }, { name: 'Notion', cost: 273 }] },
+  { month: 'Jun', waste: 450, breakdown: [{ name: 'Spotify', cost: 179 }, { name: 'Netflix', cost: 499 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Swiggy One', cost: 299 }, { name: 'Adobe CC', cost: 323, unused: true }] },
+  { month: 'Jul', waste: 500, hikes: { name: 'Netflix', oldPrice: 499, newPrice: 649 }, breakdown: [{ name: 'Netflix (Hiked)', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Adobe CC', cost: 622, unused: true }] },
+  { month: 'Aug', waste: 550, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Google One', cost: 210 }, { name: 'Adobe CC', cost: 562, unused: true }] },
+  { month: 'Sep', waste: 600, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Zomato Gold', cost: 249 }, { name: 'Adobe CC', cost: 573, unused: true }] },
+  { month: 'Oct', waste: 650, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Apple One', cost: 365 }, { name: 'Adobe CC', cost: 557, unused: true }] },
+  { month: 'Nov', waste: 700, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'YouTube Prem', cost: 299 }, { name: 'Adobe CC', cost: 723, unused: true }] },
+  { month: 'Dec', waste: 750, breakdown: [{ name: 'Netflix', cost: 649 }, { name: 'Spotify', cost: 179 }, { name: 'Gym Membership', cost: 1200, unused: true }, { name: 'Swiggy One', cost: 299 }, { name: 'Adobe CC', cost: 793, unused: true }] }
 ];
+
+const MONTHS_DATA: MonthData[] = RAW_MONTHS.map((m) => ({
+  ...m,
+  spend: m.breakdown.reduce((sum, item) => sum + item.cost, 0)
+}));
 
 export const CostOfForgettingSection: React.FC<CostOfForgettingSectionProps> = ({ onExplore }) => {
   const [selectedMonthIndex, setSelectedMonthIndex] = useState<number>(6); // July (the hike month)
@@ -164,10 +169,13 @@ export const CostOfForgettingSection: React.FC<CostOfForgettingSectionProps> = (
                 const hasHike = !!item.hikes;
 
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={item.month}
+                    aria-pressed={isSelected}
+                    aria-label={`${item.month}: ₹${item.spend}`}
                     onClick={() => setSelectedMonthIndex(idx)}
-                    className="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer relative z-10"
+                    className="flex-1 flex flex-col items-center h-full justify-end group cursor-pointer relative z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF5C38] rounded"
                   >
                     {/* Tooltip on active */}
                     {isSelected && (
@@ -209,7 +217,7 @@ export const CostOfForgettingSection: React.FC<CostOfForgettingSectionProps> = (
                     >
                       {item.month}
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>

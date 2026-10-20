@@ -32,14 +32,18 @@ interface DashboardTabProps {
 
 export const getCategoryIcon = (category: string) => {
   switch (category) {
+    case 'ENTERTAINMENT':
     case 'STREAMING':
       return <Tv className="w-4 h-4 text-purple-400" />;
+    case 'PRODUCTIVITY':
     case 'SOFTWARE':
       return <Cpu className="w-4 h-4 text-[#38BDF8]" />;
     case 'GAMING':
       return <Gamepad2 className="w-4 h-4 text-[#FF5C38]" />;
+    case 'CLOUD':
     case 'UTILITIES':
       return <Zap className="w-4 h-4 text-amber-400" />;
+    case 'HEALTH':
     case 'FITNESS':
       return <Dumbbell className="w-4 h-4 text-emerald-400" />;
     default:
@@ -49,14 +53,18 @@ export const getCategoryIcon = (category: string) => {
 
 export const getCategoryBadgeClass = (category: string) => {
   switch (category) {
+    case 'ENTERTAINMENT':
     case 'STREAMING':
       return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+    case 'PRODUCTIVITY':
     case 'SOFTWARE':
       return 'bg-sky-500/15 text-sky-300 border-sky-500/30';
     case 'GAMING':
       return 'bg-[#FF5C38]/15 text-[#FF5C38] border-[#FF5C38]/30';
+    case 'CLOUD':
     case 'UTILITIES':
       return 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+    case 'HEALTH':
     case 'FITNESS':
       return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
     default:

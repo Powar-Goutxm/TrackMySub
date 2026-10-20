@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,7 +32,7 @@ public class SubscriptionService {
         log.debug("Fetching subscriptions for user: {}", userId);
         return subscriptionRepository.findByUserId(userId).stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public SubscriptionResponse getSubscription(UUID userId, UUID subscriptionId) {

@@ -148,7 +148,7 @@ export const SocialProofSection: React.FC<SocialProofSectionProps> = () => {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[220px]"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {TESTIMONIALS.slice(currentIndex, currentIndex + 2).map((item, i) => (
               <motion.div
                 key={item.author}

@@ -5,7 +5,6 @@ import com.trackmysub.entity.enums.NotificationChannel;
 import com.trackmysub.entity.enums.NotificationType;
 import com.trackmysub.entity.enums.SubscriptionStatus;
 import com.trackmysub.repository.SubscriptionRepository;
-import com.trackmysub.repository.UserRepository;
 import com.trackmysub.service.EmailService;
 import com.trackmysub.service.NotificationService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +23,19 @@ public class AlertScheduler {
 
     private final SubscriptionRepository subscriptionRepository;
     private final NotificationService notificationService;
-    private final UserRepository userRepository;
     private final Optional<EmailService> emailService;
 
     public AlertScheduler(SubscriptionRepository subscriptionRepository, NotificationService notificationService,
-                          UserRepository userRepository, Optional<EmailService> emailService) {
+                          Optional<EmailService> emailService) {
         this.subscriptionRepository = subscriptionRepository;
         this.notificationService = notificationService;
-        this.userRepository = userRepository;
         this.emailService = emailService;
     }
 
+    public record AlertSweepResult(int renewalsFound, int trialsFound, String message) {}
+
     @Scheduled(cron = "${app.alert.cron}")
-    public void checkAndSendAlerts() {
+    public AlertSweepResult checkAndSendAlerts() {
         log.info("Starting scheduled alert check");
         LocalDate today = LocalDate.now();
         LocalDate inThreeDays = today.plusDays(3);
@@ -81,5 +80,6 @@ public class AlertScheduler {
         }
 
         log.info("Completed scheduled alert check. Renewals sent: {}, Trial expiries sent: {}", renewalCount, trialCount);
+        return new AlertSweepResult(renewalCount, trialCount, "Alert check executed successfully");
     }
 }
