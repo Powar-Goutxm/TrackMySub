@@ -60,8 +60,7 @@ public class NotificationController {
 
     @PostMapping("/check-alerts")
     @Operation(summary = "Trigger alert sweep")
-    public ResponseEntity<java.util.Map<String, String>> checkAlerts() {
-        alertScheduler.checkAndSendAlerts();
-        return ResponseEntity.ok(java.util.Map.of("message", "Alert check executed successfully"));
+    public ResponseEntity<com.trackmysub.scheduler.AlertScheduler.AlertSweepResult> checkAlerts() {
+        return ResponseEntity.ok(alertScheduler.checkAndSendAlerts());
     }
 }

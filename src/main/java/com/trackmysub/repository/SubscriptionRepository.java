@@ -15,5 +15,4 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, UUID
     List<Subscription> findByUserIdAndStatus(UUID userId, SubscriptionStatus status);
     List<Subscription> findByStatusAndNextRenewalDateBetween(SubscriptionStatus status, LocalDate from, LocalDate to);
     List<Subscription> findByStatusAndTrialEndDateBetween(SubscriptionStatus status, LocalDate from, LocalDate to);
-    List<Subscription> findByUserIdOrderByNextRenewalDateAsc(UUID userId);
 }

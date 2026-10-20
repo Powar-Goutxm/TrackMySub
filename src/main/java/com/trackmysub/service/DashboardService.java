@@ -54,7 +54,7 @@ public class DashboardService {
                         s.getId(), s.getServiceName(), s.getCategory(), s.getCost(), s.getBillingCycle(),
                         s.getStatus(), s.getNextRenewalDate(), s.getTrialEndDate(), s.getCreatedAt(), s.getUpdatedAt()
                 ))
-                .collect(Collectors.toList());
+                .toList();
 
         return new DashboardSummaryResponse(totalMonthlySpend, totalYearlySpend, activeSubs.size(), upcomingRenewals);
     }
@@ -79,6 +79,6 @@ public class DashboardService {
             }
             
             return new CategoryBreakdownResponse(category, totalMonthly, subs.size());
-        }).sorted((a, b) -> b.totalSpend().compareTo(a.totalSpend())).collect(Collectors.toList());
+        }).sorted((a, b) -> b.totalSpend().compareTo(a.totalSpend())).toList();
     }
 }

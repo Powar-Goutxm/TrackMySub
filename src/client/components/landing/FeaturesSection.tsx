@@ -33,6 +33,15 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onExplore }) =
     { day: 'Sat', date: 17, hasRenewal: true, count: 1 }
   ];
 
+  const renewalsByDate: Record<number, Array<{ name: string; cost: number; due: string; color: string; initial: string; isHike?: boolean }>> = {
+    12: [{ name: 'Spotify', cost: 179, due: 'Due Mon 12', color: '#1DB954', initial: 'S' }],
+    15: [
+      { name: 'Netflix', cost: 649, due: 'Due Thu 15', color: '#E50914', initial: 'N', isHike: true },
+      { name: 'Notion', cost: 500, due: 'Due Thu 15', color: '#FFFFFF', initial: 'N' }
+    ],
+    17: [{ name: 'Adobe CC', cost: 1675, due: 'Due Sat 17', color: '#FF0000', initial: 'A' }]
+  };
+
   return (
     <section id="features" className="py-20 md:py-28 relative border-t border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -183,61 +192,37 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onExplore }) =
                     </span>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <motion.div
-                        whileHover={{ y: -2 }}
-                        className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-between"
-                      >
-                        <div className="flex items-center space-x-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-[#1DB954]/20 text-[#1DB954] flex items-center justify-center font-bold text-xs">S</span>
-                          <div>
-                            <p className="text-xs font-bold text-white">Spotify</p>
-                            <p className="text-[10px] text-slate-400">Due Mon 12</p>
-                          </div>
+                      {(renewalsByDate[selectedDay] && renewalsByDate[selectedDay].length > 0) ? (
+                        renewalsByDate[selectedDay].map((item) => (
+                          <motion.div
+                            key={item.name}
+                            whileHover={{ y: -2 }}
+                            className={`p-3 rounded-xl flex items-center justify-between ${
+                              item.isHike
+                                ? "bg-[#FF5C38]/10 border border-[#FF5C38]/30"
+                                : "bg-white/[0.04] border border-white/[0.08]"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2.5">
+                              <span
+                                className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs"
+                                style={{ backgroundColor: `${item.color}20`, color: item.color }}
+                              >
+                                {item.initial}
+                              </span>
+                              <div>
+                                <p className="text-xs font-bold text-white">{item.name}</p>
+                                <p className="text-[10px] text-slate-400">{item.due}</p>
+                              </div>
+                            </div>
+                            <span className="font-mono-numbers text-xs font-bold text-slate-200">₹{item.cost}</span>
+                          </motion.div>
+                        ))
+                      ) : (
+                        <div className="col-span-full py-4 text-center text-xs text-slate-500 italic bg-white/[0.02] rounded-xl border border-white/5">
+                          No renewals due on this date.
                         </div>
-                        <span className="font-mono-numbers text-xs font-bold text-slate-200">₹179</span>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ y: -2 }}
-                        className="p-3 rounded-xl bg-[#FF5C38]/10 border border-[#FF5C38]/30 flex items-center justify-between"
-                      >
-                        <div className="flex items-center space-x-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-[#E50914]/20 text-[#E50914] flex items-center justify-center font-bold text-xs">N</span>
-                          <div>
-                            <p className="text-xs font-bold text-white">Netflix</p>
-                            <p className="text-[10px] text-[#FF7A59]">Due Thu 15</p>
-                          </div>
-                        </div>
-                        <span className="font-mono-numbers text-xs font-bold text-[#FF5C38]">₹649</span>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ y: -2 }}
-                        className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-between"
-                      >
-                        <div className="flex items-center space-x-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center font-bold text-xs">N</span>
-                          <div>
-                            <p className="text-xs font-bold text-white">Notion</p>
-                            <p className="text-[10px] text-slate-400">Due Thu 15</p>
-                          </div>
-                        </div>
-                        <span className="font-mono-numbers text-xs font-bold text-slate-200">₹500</span>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ y: -2 }}
-                        className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-between"
-                      >
-                        <div className="flex items-center space-x-2.5">
-                          <span className="w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-xs">A</span>
-                          <div>
-                            <p className="text-xs font-bold text-white">Adobe CC</p>
-                            <p className="text-[10px] text-slate-400">Due Sat 17</p>
-                          </div>
-                        </div>
-                        <span className="font-mono-numbers text-xs font-bold text-slate-200">₹1,675</span>
-                      </motion.div>
+                      )}
                     </div>
                   </div>
 

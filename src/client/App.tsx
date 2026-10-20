@@ -56,12 +56,7 @@ export const App: React.FC = () => {
         const me = await api.getMe();
         setUser(me);
       } catch {
-        setUser({
-          id: '00000000-0000-0000-0000-000000000001',
-          name: 'Jane Doe',
-          email: 'jane@example.com',
-          createdAt: new Date().toISOString()
-        });
+        setUser(null);
       }
 
       // 2. Fetch data in parallel
@@ -118,10 +113,26 @@ export const App: React.FC = () => {
   };
 
   const handleToggleStatus = async (sub: Subscription) => {
+    if (sub.status !== 'ACTIVE' && sub.status !== 'PAUSED') {
+      showToast('Only active or paused subscriptions can be toggled', 'error');
+      return;
+    }
+    if (!sub.nextRenewalDate) {
+      showToast('A next renewal date is required to change status', 'error');
+      return;
+    }
     const newStatus = sub.status === 'PAUSED' ? 'ACTIVE' : 'PAUSED';
     try {
-      await api.updateSubscription(sub.id, { status: newStatus });
-      showToast(`${sub.serviceName} marked as ${newStatus.toLowerCase()}`);
+      await api.updateSubscription(sub.id, {
+        serviceName: sub.serviceName,
+        category: sub.category,
+        cost: sub.cost,
+        billingCycle: sub.billingCycle,
+        status: newStatus,
+        nextRenewalDate: sub.nextRenewalDate,
+        trialEndDate: sub.trialEndDate
+      });
+      showToast(` marked as `);
       await loadAllData();
     } catch (err: any) {
       showToast(err.message, 'error');

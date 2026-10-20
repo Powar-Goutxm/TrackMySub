@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, HelpCircle, Shield, FileText, Send, CheckCircle2, MessageSquare, X } from 'lucide-react';
+import { Mail, HelpCircle, Shield, FileText, CheckCircle2, MessageSquare, X } from 'lucide-react';
 
 interface ContactSectionProps {}
 
@@ -13,6 +13,9 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !message) return;
+    window.location.href = `mailto:support@trackmysub.com?subject=Support%20Inquiry&body=${encodeURIComponent(
+      `Email: ${email}\n\nMessage:\n${message}`
+    )}`;
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -57,6 +60,7 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
               className="pt-2 flex flex-wrap gap-3"
             >
               <button
+                type="button"
                 onClick={() => setShowContactModal(true)}
                 className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-white/10 hover:bg-white/15 border border-white/10 transition cursor-pointer active:scale-98"
               >
@@ -82,15 +86,15 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col sm:items-end space-y-3 text-xs text-slate-400"
           >
-            <a href="#help" className="flex items-center space-x-2 hover:text-white transition group">
+            <a href="mailto:support@trackmysub.com?subject=Help%20Center" className="flex items-center space-x-2 hover:text-white transition group">
               <HelpCircle className="w-4 h-4 text-slate-500 group-hover:text-slate-300" />
               <span>Help Center</span>
             </a>
-            <a href="#privacy" className="flex items-center space-x-2 hover:text-white transition group">
+            <a href="mailto:support@trackmysub.com?subject=Privacy%20Policy" className="flex items-center space-x-2 hover:text-white transition group">
               <Shield className="w-4 h-4 text-slate-500 group-hover:text-slate-300" />
               <span>Privacy Policy</span>
             </a>
-            <a href="#terms" className="flex items-center space-x-2 hover:text-white transition group">
+            <a href="mailto:support@trackmysub.com?subject=Terms%20of%20Service" className="flex items-center space-x-2 hover:text-white transition group">
               <FileText className="w-4 h-4 text-slate-500 group-hover:text-slate-300" />
               <span>Terms of Service</span>
             </a>
@@ -112,8 +116,10 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
               <div className="flex items-center justify-between pb-2">
                 <h3 className="text-lg font-bold text-white">Send us a message</h3>
                 <button
+                  type="button"
+                  aria-label="Close"
                   onClick={() => setShowContactModal(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10"
+                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -129,8 +135,9 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
               ) : (
                 <form onSubmit={handleSubmit} className="mt-4 space-y-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Your Email</label>
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-300 mb-1">Your Email</label>
                     <input
+                      id="contact-email"
                       type="email"
                       required
                       placeholder="you@domain.com"
@@ -140,8 +147,9 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Message</label>
+                    <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-300 mb-1">Message</label>
                     <textarea
+                      id="contact-message"
                       rows={4}
                       required
                       placeholder="How can we help?"
@@ -154,15 +162,15 @@ export const ContactSection: React.FC<ContactSectionProps> = () => {
                     <button
                       type="button"
                       onClick={() => setShowContactModal(false)}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white cursor-pointer"
+                      className="px-3.5 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#FF5C38] hover:bg-[#ff6e4d] cursor-pointer"
+                      className="px-4 py-2 text-xs font-bold text-white bg-[#FF5C38] hover:bg-[#ff6e4d] rounded-xl transition cursor-pointer"
                     >
-                      Send message
+                      Send Message
                     </button>
                   </div>
                 </form>

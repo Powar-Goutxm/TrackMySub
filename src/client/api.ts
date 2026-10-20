@@ -33,9 +33,6 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-  } else {
-    // If not logged in with token, allow demo mode
-    headers['x-demo-user'] = 'true';
   }
 
   const response = await fetch(endpoint, {
@@ -48,6 +45,9 @@ async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise
   }
 
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      tokenStorage.clearTokens();
+    }
     let errMessage = `Error ${response.status}`;
     try {
       const errData = await response.json();
